@@ -1,9 +1,13 @@
+; guide: https://ccl.northwestern.edu/netlogo/docs/programming.html
+; https://ccl.northwestern.edu/netlogo/docs/dictionary.html
+
 turtles-own[energy]
 patches-own[food water danger]
 
-breed[truth-strategy truth-strategies]
-breed[simple-strategy simple-strategies]
+breed[truth-strategies truth-strategy] ; The second input defines the name of a single member of the breed.
+breed[simple-strategies simple-strategy]
 
+;*********************Setup*************************
 to setup
   clear-all
   setup-strategies
@@ -17,18 +21,20 @@ to setup
   reset-ticks
 end
 
+;*********************Setup-Strategies*************************
 to setup-strategies
   set-default-shape turtles "person"
-  create-truth-strategy truth-strategy-num[setxy random-xcor random-ycor set color white 
+  create-truth-strategies truth-strategy-num[setxy random-xcor random-ycor set color white
     set energy random-normal 100 5  ]
-  create-simple-strategy simple-strategy-num[setxy random-xcor random-ycor set color black
+  create-simple-strategies simple-strategy-num[setxy random-xcor random-ycor set color black
     set energy random-normal 100 5 ]
-  
+
 end
 
+;*********************GO*************************
 to go
   ask turtles[if (energy < 50) [die]
-  
+
   living-cost
   ]
   move
@@ -36,31 +42,36 @@ to go
   ask patches[if (food < 100)[set food food + food-growth-rate] ]
   tick
   if not any? turtles [stop]
-  
+
 end
 
+;*********************get-energy*************************
 to get-energy
-  
-  ask simple-strategy[if any? neighbors with [food > (food-uper-limit / 2)]  [let maxpatch one-of neighbors with [food > (food-uper-limit / 2)] 
-      let f [food] of maxpatch  set energy energy + (f / simple-eating-rate-inverse)  
+
+  ask simple-strategies[if any? neighbors with [food > (food-uper-limit / 2)]  [let maxpatch one-of neighbors with [food > (food-uper-limit / 2)]
+      let f [food] of maxpatch  set energy energy + (f / simple-eating-rate-inverse)
       ask maxpatch[set food food - (f / simple-eating-rate-inverse)] ]
-    if not any? neighbors with [food > (food-uper-limit / 2)] [let neighbor-patch one-of neighbors let f [food] of neighbor-patch set energy energy + (f / simple-eating-rate-inverse)  
+    if not any? neighbors with [food > (food-uper-limit / 2)] [let neighbor-patch one-of neighbors let f [food] of neighbor-patch set energy energy + (f / simple-eating-rate-inverse)
       ask neighbor-patch[set food food - (f / simple-eating-rate-inverse)] ]
   ]
-  ask truth-strategy[let d max[food] of neighbors let maxpatch one-of neighbors with[food = d]
-    
-    set energy energy + (d / truth-eating-rate-inverse) 
+  ask truth-strategies[let d max[food] of neighbors let maxpatch one-of neighbors with[food = d]
+
+    set energy energy + (d / truth-eating-rate-inverse)
     ask maxpatch[set food food - (d / truth-eating-rate-inverse)]
   ]
 end
+
+;*********************Move*************************
 to move
-  ask truth-strategy[fd 1 if [danger] of patch-here > 10 [fd 1]
+  ask truth-strategies[fd 1 if [danger] of patch-here > 10 [fd 1]
     ]
-  ask simple-strategy[fd 1
+  ask simple-strategies[fd 1
     if [danger] of patch-here > 10 and [danger] of patch-here < 50 [set energy energy - ([danger] of patch-here)]
     if [danger] of patch-here >= 50 [fd 1]]
-  
+
 end
+
+;*********************living-Cost*************************
 to living-cost
   set energy energy - living-cost-quant
 end
@@ -68,10 +79,10 @@ end
 GRAPHICS-WINDOW
 210
 10
-649
-470
-16
-16
+647
+448
+-1
+-1
 13.0
 1
 10
@@ -135,7 +146,7 @@ truth-strategy-num
 truth-strategy-num
 0
 10000
-2866
+3503.0
 1
 1
 NIL
@@ -150,7 +161,7 @@ simple-strategy-num
 simple-strategy-num
 0
 10000
-2994
+573.0
 1
 1
 NIL
@@ -179,10 +190,10 @@ PENS
 MONITOR
 934
 39
-1061
+1090
 84
 NIL
-count truth-strategy
+count truth-strategies
 17
 1
 11
@@ -190,10 +201,10 @@ count truth-strategy
 MONITOR
 1094
 39
-1227
+1263
 84
 NIL
-count simple-strategy
+count simple-strategies
 17
 1
 11
@@ -207,7 +218,7 @@ living-cost-quant
 living-cost-quant
 0
 100
-75
+75.0
 1
 1
 NIL
@@ -222,7 +233,7 @@ food-growth-rate
 food-growth-rate
 0
 100
-41
+41.0
 1
 1
 NIL
@@ -237,7 +248,7 @@ simple-eating-rate-inverse
 simple-eating-rate-inverse
 1
 100
-1
+1.0
 1
 1
 NIL
@@ -252,7 +263,7 @@ truth-eating-rate-inverse
 truth-eating-rate-inverse
 1
 100
-1
+1.0
 1
 1
 NIL
@@ -267,7 +278,7 @@ food-uper-limit
 food-uper-limit
 0
 1000
-100
+100.0
 1
 1
 NIL
@@ -614,9 +625,8 @@ false
 0
 Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
-
 @#$#@#$#@
-NetLogo 5.1.0
+NetLogo 6.0.1
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
@@ -632,7 +642,6 @@ true
 0
 Line -7500403 true 150 150 90 180
 Line -7500403 true 150 150 210 180
-
 @#$#@#$#@
 0
 @#$#@#$#@

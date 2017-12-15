@@ -19,16 +19,16 @@ end
 
 to setup-strategies
   set-default-shape turtles "person"
-  create-truth-strategy truth-strategy-num[setxy random-xcor random-ycor set color white 
+  create-truth-strategy truth-strategy-num[setxy random-xcor random-ycor set color white
     set energy random-normal 100 5  ]
   create-simple-strategy simple-strategy-num[setxy random-xcor random-ycor set color black
     set energy random-normal 100 5 ]
-  
+
 end
 
 to go
   ask turtles[if (energy < 50) [die]
-  
+
   living-cost
   ]
   move
@@ -36,20 +36,20 @@ to go
   ask patches[if (food < 100)[set food food + food-growth-rate] ]
   tick
   if not any? turtles [stop]
-  
+
 end
 
 to get-energy
-  
-  ask simple-strategy[if any? neighbors with [food > (food-uper-limit / 2)]  [let maxpatch one-of neighbors with [food > (food-uper-limit / 2)] 
-      let f [food] of maxpatch  set energy energy + (f / simple-eating-rate-inverse)  
+
+  ask simple-strategy[if any? neighbors with [food > (food-uper-limit / 2)]  [let maxpatch one-of neighbors with [food > (food-uper-limit / 2)]
+      let f [food] of maxpatch  set energy energy + (f / simple-eating-rate-inverse)
       ask maxpatch[set food food - (f / simple-eating-rate-inverse)] ]
-    if not any? neighbors with [food > (food-uper-limit / 2)] [let neighbor-patch one-of neighbors let f [food] of neighbor-patch set energy energy + (f / simple-eating-rate-inverse)  
+    if not any? neighbors with [food > (food-uper-limit / 2)] [let neighbor-patch one-of neighbors let f [food] of neighbor-patch set energy energy + (f / simple-eating-rate-inverse)
       ask neighbor-patch[set food food - (f / simple-eating-rate-inverse)] ]
   ]
   ask truth-strategy[let d max[food] of neighbors let maxpatch one-of neighbors with[food = d]
-    
-    set energy energy + (d / truth-eating-rate-inverse) 
+
+    set energy energy + (d / truth-eating-rate-inverse)
     ask maxpatch[set food food - (d / truth-eating-rate-inverse)]
   ]
 end
@@ -59,7 +59,7 @@ to move
   ask simple-strategy[fd 1
     if [danger] of patch-here > 10 and [danger] of patch-here < 50 [set energy energy - ([danger] of patch-here)]
     if [danger] of patch-here >= 50 [fd 1]]
-  
+
 end
 to living-cost
   set energy energy - living-cost-quant
@@ -68,10 +68,10 @@ end
 GRAPHICS-WINDOW
 210
 10
-649
-470
-16
-16
+647
+448
+-1
+-1
 13.0
 1
 10
@@ -135,7 +135,7 @@ truth-strategy-num
 truth-strategy-num
 0
 10000
-2866
+100.0
 1
 1
 NIL
@@ -150,7 +150,7 @@ simple-strategy-num
 simple-strategy-num
 0
 10000
-2994
+900.0
 1
 1
 NIL
@@ -179,7 +179,7 @@ PENS
 MONITOR
 934
 39
-1061
+1090
 84
 NIL
 count truth-strategy
@@ -207,7 +207,7 @@ living-cost-quant
 living-cost-quant
 0
 100
-75
+75.0
 1
 1
 NIL
@@ -222,7 +222,7 @@ food-growth-rate
 food-growth-rate
 0
 100
-41
+41.0
 1
 1
 NIL
@@ -237,7 +237,7 @@ simple-eating-rate-inverse
 simple-eating-rate-inverse
 1
 100
-1
+1.0
 1
 1
 NIL
@@ -252,7 +252,7 @@ truth-eating-rate-inverse
 truth-eating-rate-inverse
 1
 100
-1
+1.0
 1
 1
 NIL
@@ -267,7 +267,7 @@ food-uper-limit
 food-uper-limit
 0
 1000
-100
+100.0
 1
 1
 NIL
@@ -614,12 +614,38 @@ false
 0
 Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
-
 @#$#@#$#@
-NetLogo 5.1.0
-@#$#@#$#@
+NetLogo 6.0.1
 @#$#@#$#@
 @#$#@#$#@
+@#$#@#$#@
+<experiments>
+  <experiment name="experiment" repetitions="1" runMetricsEveryStep="false">
+    <setup>setup</setup>
+    <go>go</go>
+    <timeLimit steps="300"/>
+    <metric>count turtles</metric>
+    <metric>count truth-strategy</metric>
+    <metric>count simple-strategy</metric>
+    <steppedValueSet variable="simple-strategy-num" first="100" step="200" last="1000"/>
+    <enumeratedValueSet variable="truth-eating-rate-inverse">
+      <value value="1"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="simple-eating-rate-inverse">
+      <value value="1"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="food-uper-limit">
+      <value value="100"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="food-growth-rate">
+      <value value="41"/>
+    </enumeratedValueSet>
+    <steppedValueSet variable="truth-strategy-num" first="100" step="200" last="1000"/>
+    <enumeratedValueSet variable="living-cost-quant">
+      <value value="75"/>
+    </enumeratedValueSet>
+  </experiment>
+</experiments>
 @#$#@#$#@
 @#$#@#$#@
 default
@@ -632,7 +658,6 @@ true
 0
 Line -7500403 true 150 150 90 180
 Line -7500403 true 150 150 210 180
-
 @#$#@#$#@
 0
 @#$#@#$#@

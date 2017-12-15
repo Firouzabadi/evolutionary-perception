@@ -1,74 +1,29 @@
 turtles-own[energy]
-patches-own[food water]
+patches-own[food water danger]
 
 breed[truth-strategy truth-strategies]
 breed[simple-strategy simple-strategies]
 
-to setup
-  clear-all
-  setup-strategies
-  ask patches[set food random(100)
-    set water random(100)
-    set pcolor food
-    ]
-  reset-ticks
-end
 
-to setup-strategies
-  set-default-shape turtles "person"
-  create-truth-strategy truth-strategy-num[setxy random-xcor random-ycor set color white 
-    set energy (random-normal 100 10)  ]
-  create-simple-strategy simple-strategy-num[setxy random-xcor random-ycor set color black
-    set energy (random-normal 100 10) ]
-  
+to draw-polygon [num-sides len]  ;; turtle procedure
+  pen-down
+  repeat num-sides [
+    fd len
+    rt 360 / num-sides
+  ]
 end
 
 to go
-  ask turtles[if (energy < 50) [die]
-  
-  living-cost
-  forward 1]
-  increase-energy
-  tick
-  if not any? turtles [stop]
-  
-end
-
-to increase-energy
-  let a random-float 100
-     let b random-float 100
-     let c random-float 100
- ask truth-strategy[if (a > b and a > c)[set energy energy + a - 35]
-   if (b > a and b > c)[set energy energy + b - 35]
-   if (c > b and c > a)[set energy energy + c - 35]]
-   ask simple-strategy[
-     if (a > 50 and b > 50 and random-float 100 > 50) [set energy energy + a - 15]
-     if (a > 50 and b > 50 and random-float 100 <= 50) [set energy energy + b - 15]
-     if (a > 50 and c > 50 and random-float 100 > 50) [set energy energy + a - 15]
-     if (a > 50 and c > 50 and random-float 100 <= 50) [set energy energy + c - 15]
-     if (c > 50 and b > 50 and random-float 100 > 50) [set energy energy + c - 15]
-     if (c > 50 and b > 50 and random-float 100 <= 50) [set energy energy + b - 15]
-     if (a < 50 and b < 50 and c >= 50 ) [set energy energy + c - 15]
-     if (a < 50 and c < 50 and b >= 50 ) [set energy energy + b - 15]
-     if (b < 50 and c < 50 and a >= 50 ) [set energy energy + a - 15]
-     if (a < 50 and b < 50 and c < 50) [set energy energy + a - 15]
-     
-   ] 
- 
-end
-
-
-to living-cost
-  set energy energy - 40
+ask turtles [ draw-polygon 8 who ]
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
 210
 10
-649
-470
-16
-16
+647
+448
+-1
+-1
 13.0
 1
 10
@@ -90,109 +45,21 @@ ticks
 30.0
 
 BUTTON
-24
-32
-87
-65
-NIL
-setup\n
-NIL
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
-
-BUTTON
-23
-71
-86
-104
-NIL
-go
-T
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
-
-SLIDER
--1
-151
-171
-184
-truth-strategy-num
-truth-strategy-num
-0
-10000
-1210
-1
-1
-NIL
-HORIZONTAL
-
-SLIDER
-5
-196
-177
-229
-simple-strategy-num
-simple-strategy-num
-0
-10000
-1210
-1
-1
-NIL
-HORIZONTAL
-
-PLOT
-703
-51
-903
-201
-plot 1
-NIL
-NIL
-0.0
-10.0
-0.0
-10.0
-true
-false
-"" ""
-PENS
-"default" 1.0 0 -11033397 true "" "plot count truth-strategy"
-"pen-1" 1.0 0 -1604481 true "" "plot count simple-strategy"
-
-MONITOR
-938
-60
-1031
-105
-truth-strategy
-count truth-strategy
-17
-1
-11
-
-MONITOR
-1045
+84
 61
-1178
-106
+147
+94
+go
+go
 NIL
-count simple-strategy
-17
 1
-11
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
 
 @#$#@#$#@
 ## WHAT IS IT?
@@ -535,9 +402,8 @@ false
 0
 Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
-
 @#$#@#$#@
-NetLogo 5.1.0
+NetLogo 6.0.1
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
@@ -553,7 +419,6 @@ true
 0
 Line -7500403 true 150 150 90 180
 Line -7500403 true 150 150 210 180
-
 @#$#@#$#@
 0
 @#$#@#$#@
